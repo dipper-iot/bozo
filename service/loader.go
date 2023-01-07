@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/dipper-iot/bozo/cli"
+	"github.com/urfave/cli/v2"
 	"sort"
 )
 

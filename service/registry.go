@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/dipper-iot/bozo/cli"
 	"github.com/dipper-iot/bozo/registry"
 	"github.com/dipper-iot/bozo/registry/consul"
+	"github.com/urfave/cli/v2"
 )
 
 type RegisterLoader struct {
@@ -23,12 +23,12 @@ func (r RegisterLoader) Name() string {
 
 func (r RegisterLoader) Flags() []cli.Flag {
 	return []cli.Flag{
-		cli.StringFlag{
-			Name:         "registry",
-			Aliases:      []string{"r"},
-			Env:          []string{"REGISTRY_TYPE"},
-			Usage:        "Registry type",
-			DefaultValue: r.defaultName,
+		&cli.StringFlag{
+			Name:    "registry",
+			Aliases: []string{"r"},
+			EnvVars: []string{"REGISTRY_TYPE"},
+			Usage:   "Registry type",
+			Value:   r.defaultName,
 		},
 	}
 }

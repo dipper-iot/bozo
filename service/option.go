@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"github.com/dipper-iot/bozo/cli"
 	"github.com/dipper-iot/bozo/registry"
 	_ "github.com/joho/godotenv"
+	"github.com/urfave/cli/v2"
 	"google.golang.org/grpc"
 	"os"
 	"reflect"
@@ -38,12 +38,12 @@ type Options struct {
 }
 
 var defaultFlag = []cli.Flag{
-	cli.StringFlag{
-		Name:         "server_address",
-		Aliases:      []string{"a"},
-		Env:          []string{"SERVER_ADDRESS"},
-		Usage:        "Server Address",
-		DefaultValue: ":",
+	&cli.StringFlag{
+		Name:    "server_address",
+		Aliases: []string{"a"},
+		EnvVars: []string{"SERVER_ADDRESS"},
+		Usage:   "Server Address",
+		Value:   ":",
 	},
 }
 
@@ -171,7 +171,7 @@ func SetMetaData(name string, value string) Option {
 	}
 }
 
-func (o *Options) run(before cli.ActionBeforeFunc, action cli.ActionFunc, after cli.ActionFunc) error {
+func (o *Options) run(before cli.ActionFunc, action cli.ActionFunc, after cli.ActionFunc) error {
 	name := "Cli Service"
 	if o.Name != "" {
 		name = o.Name
@@ -189,8 +189,7 @@ func (o *Options) run(before cli.ActionBeforeFunc, action cli.ActionFunc, after 
 		Description: "Cli Command service",
 		Flags:       o.flags,
 		Commands:    commands,
-		Context:     o.Context,
-		Before: func(c *cli.ContextBefore) error {
+		Before: func(c *cli.Context) error {
 
 			if before != nil {
 				err := before(c)
@@ -199,7 +198,7 @@ func (o *Options) run(before cli.ActionBeforeFunc, action cli.ActionFunc, after 
 				}
 			}
 
-			err := runCallBack(o, o.listBeforeStart, c.Context)
+			err := runCallBack(o, o.listBeforeStart, c)
 			if err != nil {
 				return err
 			}

@@ -3,16 +3,17 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/dipper-iot/bozo/cli"
 	"github.com/dipper-iot/bozo/logger"
 	"github.com/dipper-iot/bozo/registry"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/urfave/cli/v2"
 	"google.golang.org/grpc"
 	"net"
 	"os"
 	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -87,15 +88,15 @@ func (s *Service) Start() error {
 	)
 
 	signalChanel := make(chan os.Signal)
-	signal.Notify(signalChanel, os.Interrupt)
+	signal.Notify(signalChanel, syscall.SIGINT, syscall.SIGTERM)
 
 	err = s.Options.run(
 		// before
-		func(c *cli.ContextBefore) error {
+		func(c *cli.Context) error {
 
 			sortLoaders(s.Options.loaders)
 
-			err = runLoader(s.Options.loaders, s.Options, c.Context, true)
+			err = runLoader(s.Options.loaders, s.Options, c, true)
 			if err != nil {
 				return err
 			}

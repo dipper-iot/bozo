@@ -1,8 +1,8 @@
 package health
 
 import (
-	"github.com/dipper-iot/bozo/cli"
 	"github.com/dipper-iot/bozo/service"
+	"github.com/urfave/cli/v2"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
